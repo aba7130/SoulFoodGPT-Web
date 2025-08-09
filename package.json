@@ -1,0 +1,8 @@
+{
+  "name": "soulfoodgpt-vercel",
+  "version": "1.0.0",
+  "description": "SoulFoodGPT Web-App auf Vercel",
+  "main": "index.html",
+  "scripts": {},
+  "dependencies": {}
+}

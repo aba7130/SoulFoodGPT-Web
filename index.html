@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoulFoodGPT – Dein Gesundheitscoach</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f4f8f7; color: #333; margin: 0; padding: 0; }
+  header { background: linear-gradient(135deg, #4CAF50, #2e7d32); color: white; text-align: center; padding: 15px; }
+  header h1 { margin: 0; font-size: 1.6rem; }
+  header p { margin: 5px 0 0; font-size: 1rem; opacity: 0.9; }
+  main { padding: 15px; max-width: 600px; margin: auto; }
+  .section { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+  h2 { font-size: 1.2rem; margin-top: 0; }
+  textarea, input, select, button {
+    width: 100%; padding: 10px; margin-top: 8px; font-size: 1rem;
+    border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box;
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  button { background: #4CAF50; color: white; font-weight: bold; border: none; margin-top: 12px; cursor: pointer; }
+  button:hover { background: #45a049; }
+  #feedback { font-size: 1rem; line-height: 1.4; }
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.4rem; }
+    header p { font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🥗 SoulFoodGPT</h1>
+  <p>Dein persönlicher Coach für Ernährung, Bewegung & Wohlbefinden</p>
+</header>
+
+<main>
+  <div class="section">
+    <h2>Tages-Check-in</h2>
+    <label>Mahlzeit eingeben:</label>
+    <textarea id="mealInput" placeholder="Z. B. Lachs mit Brokkoli und Quinoa"></textarea>
+
+    <label>Heutige Stimmung:</label>
+    <select id="moodInput">
+      <option value="">Bitte wählen</option>
+      <option>😊 Gut</option>
+      <option>😐 Neutral</option>
+      <option>😔 Niedrig</option>
+      <option>🔥 Motiviert</option>
+    </select>
+
+    <label>Aktuelles Gewicht (kg):</label>
+    <input type="number" id="weightInput" step="0.1">
+
+    <label>Tagesziel:</label>
+    <select id="goalInput">
+      <option>Muskelaufbau</option>
+      <option>Fettabbau</option>
+      <option>Erhaltung</option>
+    </select>
+
+    <button onclick="sendData()">Analysieren</button>
+  </div>
+
+  <div class="section">
+    <h2>Analyse & Feedback</h2>
+    <div id="feedback">Noch keine Eingaben.</div>
+  </div>
+</main>
+
+<script>
+async function sendData() {
+    const meal = document.getElementById('mealInput').value;
+    const mood = document.getElementById('moodInput').value;
+    const weight = document.getElementById('weightInput').value;
+    const goal = document.getElementById('goalInput').value;
+
+    const res = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ meal, mood, weight, goal })
+    });
+
+    const data = await res.json();
+    document.getElementById('feedback').innerHTML = data.feedback;
+}
+</script>
+
+</body>
+</html>
