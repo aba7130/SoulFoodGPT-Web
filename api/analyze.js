@@ -1,25 +1,46 @@
-export default function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
+import OpenAI from "openai";
 
-    const { meal, mood, weight, goal } = req.body;
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
-    let feedback = `📊 <strong>Analyse</strong><br>`;
-    feedback += `- Mahlzeit: ${meal || 'Keine Eingabe'}<br>`;
-    feedback += `- Stimmung: ${mood || 'Keine Angabe'}<br>`;
-    feedback += `- Gewicht: ${weight || 'Keine Angabe'} kg<br>`;
-    feedback += `- Ziel: ${goal || 'Keine Angabe'}<br><br>`;
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
-    if (meal && meal.toLowerCase().includes("lachs")) {
-        feedback += `✅ Gut: Omega-3-Fette wirken entzündungshemmend.<br>`;
-    } else {
-        feedback += `💡 Tipp: Mehr Omega-3-haltige Lebensmittel (z. B. Lachs, Walnüsse, Leinsamen).<br>`;
-    }
+  const { meal, mood, weight, goal } = req.body;
 
-    if (goal === "Muskelaufbau") {
-        feedback += `⚠️ Verbesserung: Achte auf genug Proteinquellen wie Huhn, Quark oder Hülsenfrüchte.<br>`;
-    }
+  try {
+    const prompt = `
+Du bist SoulFoodGPT, ein Gesundheits- und Fitness-Coach für Menschen mit MS.
+Analysiere die folgende Eingabe und gib kurzes, strukturiertes Feedback.
 
+Mahlzeit: ${meal || "keine Angabe"}
+Stimmung: ${mood || "keine Angabe"}
+Gewicht: ${weight || "keine Angabe"} kg
+Ziel: ${goal || "keine Angabe"}
+
+Format:
+✅ Positives Feedback
+⚠️ Verbesserungsvorschläge
+💡 Tipp des Tages
+    `;
+
+    const completion = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: "Du bist ein einfühlsamer Ernährungs- und Fitnesscoach, spezialisiert auf MS und entzündungshemmende Ernährung." },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.7
+    });
+
+    const feedback = completion.choices[0].message.content;
     res.status(200).json({ feedback });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Fehler bei der Analyse' });
+  }
 }
