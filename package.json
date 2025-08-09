@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "SoulFoodGPT Web-App auf Vercel",
   "main": "index.html",
+  "type": "module",
   "scripts": {},
-  "dependencies": {}
+  "dependencies": {
+    "openai": "^4.0.0"
+  }
 }
