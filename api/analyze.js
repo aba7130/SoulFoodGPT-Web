@@ -20,26 +20,19 @@ Liefere:
     `;
 
     const messages = [
-      { role: "system", content: "Du bist ein präziser Ernährungscoach mit Fokus auf entzündungshemmende Ernährung, Nährwertberechnung und gesunde Essgewohnheiten." },
-      { role: "user", content: [{ type: "text", text: prompt }] }
+      { role: "system", content: "Du bist ein präziser Ernährungscoach mit Fokus auf entzündungshemmende Ernährung." },
+      {
+        role: "user",
+        content: [
+          { type: "text", text: prompt },
+          ...(imageBase64 ? [{ type: "image_url", image_url: { url: `data:image/jpeg;base64,${imageBase64}` } }] : []),
+          ...(meal ? [{ type: "text", text: `Beschreibung des Nutzers: ${meal}` }] : [])
+        ]
+      }
     ];
 
-    if (imageBase64) {
-      messages[1].content.push({
-        type: "image_url",
-        image_url: `data:image/jpeg;base64,${imageBase64}`
-      });
-    }
-
-    if (meal) {
-      messages[1].content.push({
-        type: "text",
-        text: `Beschreibung des Nutzers: ${meal}`
-      });
-    }
-
     const completion = await client.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o-mini", // Vision-fähiges Modell
       messages
     });
 
