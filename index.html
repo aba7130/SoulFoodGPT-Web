@@ -5,13 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SoulFoodGPT – Dein Gesundheitscoach</title>
 
-<!-- Logo als Favicon -->
 <link rel="icon" type="image/png" href="assets/709CCFF5-D39E-4C1B-A596-739516E8AF17.png?v=1">
-
-<!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
-<!-- Externes CSS -->
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,7 +22,11 @@
 <main>
   <div class="section">
     <h2>Tages-Check-in</h2>
-    <label>Mahlzeit eingeben:</label>
+
+    <label>Foto der Mahlzeit:</label>
+    <input type="file" id="mealImage" accept="image/*" capture="environment">
+
+    <label>Mahlzeit (optional beschreiben):</label>
     <textarea id="mealInput" placeholder="Z. B. Lachs mit Brokkoli und Quinoa"></textarea>
 
     <label>Heutige Stimmung:</label>
@@ -59,18 +58,27 @@
 </main>
 
 <script>
-// API-Aufruf
 async function sendData() {
     const meal = document.getElementById('mealInput').value;
     const mood = document.getElementById('moodInput').value;
     const weight = document.getElementById('weightInput').value;
     const goal = document.getElementById('goalInput').value;
+    const imageFile = document.getElementById('mealImage').files[0];
+
+    let imageBase64 = null;
+    if (imageFile) {
+        imageBase64 = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.readAsDataURL(imageFile);
+        });
+    }
 
     try {
         const res = await fetch('/api/analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ meal, mood, weight, goal })
+            body: JSON.stringify({ meal, mood, weight, goal, imageBase64 })
         });
         const data = await res.json();
         document.getElementById('feedback').innerHTML = data.feedback || "Keine Antwort erhalten";
@@ -82,7 +90,6 @@ async function sendData() {
 
 // Theme-Umschalter
 const themeToggle = document.getElementById('themeToggle');
-
 if(localStorage.getItem('theme') === 'dark') {
   document.body.classList.add('dark');
   themeToggle.textContent = '☀️';
@@ -95,7 +102,6 @@ if(localStorage.getItem('theme') === 'dark') {
     themeToggle.textContent = '☀️';
   }
 }
-
 themeToggle.addEventListener('click', () => {
   document.body.classList.toggle('dark');
   if(document.body.classList.contains('dark')) {
