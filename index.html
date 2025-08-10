@@ -69,19 +69,26 @@
 
 <script>
 async function sendData() {
+    console.log("Analysieren-Button geklickt");
+
     const meal = document.getElementById('mealInput').value;
     const mood = document.getElementById('moodInput').value;
     const weight = document.getElementById('weightInput').value;
     const goal = document.getElementById('goalInput').value;
 
-    const res = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ meal, mood, weight, goal })
-    });
-
-    const data = await res.json();
-    document.getElementById('feedback').innerHTML = data.feedback;
+    try {
+        const res = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ meal, mood, weight, goal })
+        });
+        const data = await res.json();
+        console.log("Antwort von API:", data);
+        document.getElementById('feedback').innerHTML = data.feedback || "Keine Antwort erhalten";
+    } catch (err) {
+        console.error("Fehler beim API-Aufruf:", err);
+        document.getElementById('feedback').innerHTML = "❌ Fehler beim API-Aufruf";
+    }
 }
 </script>
 
