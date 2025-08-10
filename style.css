@@ -1,0 +1,133 @@
+:root {
+  --bg-light: linear-gradient(135deg, #f7f9fc, #e8f5e9);
+  --bg-dark: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+  --text-light: #333;
+  --text-dark: #f0f0f0;
+
+  --section-light: rgba(255, 255, 255, 0.85);
+  --section-dark: rgba(30, 30, 30, 0.85);
+
+  --button-light: linear-gradient(135deg, #ff9800, #ffb74d);
+  --button-dark: linear-gradient(135deg, #ff9800, #e65100);
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background: var(--bg-light);
+  color: var(--text-light);
+}
+
+body.dark {
+  background: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  background: var(--button-light);
+  color: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+body.dark header {
+  background: var(--button-dark);
+}
+
+header img.logo {
+  height: 48px;
+  margin-right: 12px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+#themeToggle {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+main {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+
+.section {
+  background: var(--section-light);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+body.dark .section {
+  background: var(--section-dark);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+label {
+  font-weight: 600;
+  margin-top: 12px;
+  display: block;
+}
+
+textarea, input, select, button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+body.dark textarea, 
+body.dark input, 
+body.dark select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #555;
+  color: var(--text-dark);
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  background: var(--button-light);
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+body.dark button {
+  background: var(--button-dark);
+}
+
+#feedback {
+  font-size: 1rem;
+  line-height: 1.5;
+  white-space: pre-line;
+}
